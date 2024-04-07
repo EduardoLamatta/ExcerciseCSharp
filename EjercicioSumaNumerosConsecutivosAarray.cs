@@ -1,5 +1,6 @@
 ﻿using System;
 
+//indicar las mayor suma de dos numeros consecutivos de un arreglo
 namespace EjercicioSumaNumerosConsecutivosArray
 {
     internal class Program
