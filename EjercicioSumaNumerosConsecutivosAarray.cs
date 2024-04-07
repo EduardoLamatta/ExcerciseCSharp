@@ -30,7 +30,7 @@ namespace EjercicioSumaNumerosConsecutivosArray
                 numbersOrder[count] = n;
                 count = 0;
             }
-            Console.WriteLine("la suma mas alta de dos numeros adyacente es: " + numbersOrder[0]);
+            Console.WriteLine("the hightest sum of two adjacent numbers is : " + numbersOrder[0]);
         }
 
     }
