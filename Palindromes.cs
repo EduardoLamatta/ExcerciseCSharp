@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ejercicioPalindromo
+namespace Palindrome
 {
-    //Indicar si la palabra escrita por el usuario es o no un palindromo
+    //Show if a user's word is or not a palindrome
     internal class Program
     {
         static void Main(string[] args)
