@@ -17,7 +17,7 @@ namespace Program
                 {
                     number = numbersList[i];
                 }
-                if (numbersList[i + 1] > number)
+                else if (numbersList[i + 1] > number)
                 {
                     number = numbersList[i + 1];
                 }
