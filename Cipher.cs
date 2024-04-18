@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 
 namespace DecryptorProgram
@@ -9,65 +11,77 @@ namespace DecryptorProgram
 
         static void Main(string[] args)
         {
-            string statement = "Bgc-bfufb tegaedppqna ql aggv zge xof tegaedppfe'l lgjb.\r\n\r\nXof adpf vflqanfe logjbvn'x hf pdwqna d cgebv qn coqro xof tbdkfe ql mjlx d lpdbb tdex. Xof tbdkfe QL XOF HGLL; qx'l kgje vjxk xg fnxfexdqn oqp ge ofe.\r\n\r\nZgrjl ql d pdxxfe gz vfrqvqna codx xoqnal kgj def ngx agqna xg vg.\r\n\r\nXof rglx gz dvvqna d zfdxjef qln'x mjlx xof xqpf qx xdwfl xg rgvf qx. Xof rglx dblg qnrbjvfl xof dvvqxqgn gz dn ghlxdrbf xg zjxjef fstdnlqgn. Xof xeqrw ql xg tqrw xof zfdxjefl xodx vgn'x zqaox fdro gxofe. - Mgon Rdepdrw.\r\n\r\n(ccc.adpdljxed.rgp/uqfc/nfcl/234346?utkjpvbjr)\r\n\r\n(ccc.hedqnkijgxf.rgp/ijgxfl/djxogel/m/mgon_rdepdrw.oxpb)";
-            List<char> listChars = new List<char>(statement);
-            String[] invalidChars = new string[] { " ", "-", "_", ",", ";", ".", "/", "(", ")", "\r", "\n", "3", "4", "'", "?", "0", "2", "6", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
-            Dictionary<string, int> dictNumbers = new Dictionary<string, int>();
-            Dictionary<string, int> dictLetters = new Dictionary<string, int>();
-            string message = string.Empty;
 
-            int repeatCounter = 0, invalidCounter = 0;
+            string messageCrypted = "Bgc-bfufb tegaedppqna ql aggv zge xof tegaedppfe'l lgjb.\r\n\r\nXof adpf vflqanfe logjbvn'x hf pdwqna d cgebv qn coqro xof tbdkfe ql mjlx d lpdbb tdex. Xof tbdkfe QL XOF HGLL; qx'l kgje vjxk xg fnxfexdqn oqp ge ofe.\r\n\r\nZgrjl ql d pdxxfe gz vfrqvqna codx xoqnal kgj def ngx agqna xg vg.\r\n\r\nXof rglx gz dvvqna d zfdxjef qln'x mjlx xof xqpf qx xdwfl xg rgvf qx. Xof rglx dblg qnrbjvfl xof dvvqxqgn gz dn ghlxdrbf xg zjxjef fstdnlqgn. Xof xeqrw ql xg tqrw xof zfdxjefl xodx vgn'x zqaox fdro gxofe. - Mgon Rdepdrw.\r\n\r\n(ccc.adpdljxed.rgp/uqfc/nfcl/234346?utkjpvbjr)\r\n\r\n(ccc.hedqnkijgxf.rgp/ijgxfl/djxogel/m/mgon_rdepdrw.oxpb)";
+            string alphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+            string keyFreqLang = "TEOAISRHNUCMDLGWFPYKJBVQX";
+            string messageDecrypted = "";
+            Dictionary<char, int> lettersCounted = new Dictionary<char, int>();
+            Dictionary<char, char> lettersFreq = new Dictionary<char, char>();
+            List<char> listChars = new List<char>(messageCrypted);
+            List<char> listFreqLangMayus = new List<char>(keyFreqLang);
+            int letterscounter = 0;
+            int freqCounter = 0;
 
-            foreach (char c in listChars)
+
+            CounterLetters(listChars, alphabet, lettersCounted, letterscounter);
+
+            FreqLetters(lettersCounted, lettersFreq, listFreqLangMayus, freqCounter);
+
+            messageDecrypted = DecryptMessage(messageCrypted, lettersFreq, messageDecrypted);
+
+            Console.WriteLine(messageDecrypted);
+
+
+        }
+        private static Dictionary<char, int> CounterLetters(List<char> listChars, string capitalLetters, Dictionary<char, int> dictlettersCounted, int counter)
+        {
+            foreach (char c in capitalLetters)
             {
                 for (int i = 0; i < listChars.Count; i++)
                 {
-                    if (c == listChars[i]) repeatCounter++;
+                    if (char.ToUpper(c) == listChars[i] || char.ToLower(c) == listChars[i]) counter++;
                 }
-                for (int i = 0; i < invalidChars.Length; i++)
+                if (!dictlettersCounted.ContainsKey(c) && counter > 0)
                 {
-                    if (c.ToString() == invalidChars[i]) invalidCounter++;
+                    dictlettersCounted.Add(c, counter);
                 }
-
-                if (!dictNumbers.ContainsKey(c.ToString()) && invalidCounter == 0)
-                {
-                    dictNumbers.Add(c.ToString(), repeatCounter);
-                }
-
-                repeatCounter = 0;
-                invalidCounter = 0;
+                counter = 0;
             }
 
-            var orderValues = dictNumbers.OrderByDescending(pair => pair.Value);
+            return dictlettersCounted;
+        }
+        private static Dictionary<char, char> FreqLetters(Dictionary<char, int> dictlettersCounted, Dictionary<char, char> dictLetterFreq, List<char> listFreqLang, int counter)
+        {
+            var orderDict = dictlettersCounted.OrderByDescending(par => par.Value);
 
-
-            Dictionary<char, char> dictLetters = new Dictionary<char, char>()
+            foreach (var kvp in orderDict)
             {
-                {'x', 't'}, {'X', 'T'}, {'f', 'e'}, {'F', 'E'}, {'g', 'o'}, {'G', 'O'}, {'d', 'a'}, {'D', 'A'},
-                {'q', 'i'}, {'Q', 'I'}, {'e', 'r'}, {'E', 'R'}, {'l', 's'}, {'L', 'S'}, {'o', 'h'}, {'O', 'H'},
-                {'n', 'n'}, {'N', 'N'}, {'j', 'u'}, {'J', 'U'}, {'p', 'm'}, {'P', 'M'}, {'r', 'c'}, {'R', 'C'},
-                {'v', 'd'}, {'V', 'D'}, {'b', 'l'}, {'B', 'L'}, {'a', 'g'}, {'A', 'G'}, {'c', 'w'}, {'C', 'W'},
-                {'t', 'p'}, {'T', 'P'}, {'z', 'f'}, {'Z', 'F'}, {'k', 'y'}, {'K', 'Y'}, {'w', 'k'}, {'W', 'K'},
-                {'m', 'j'}, {'M', 'J'}, {'u', 'v'}, {'U', 'V'}, {'h', 'b'}, {'H', 'B'}, {'i', 'q'}, {'I', 'Q'},
-                {'s', 'x'}, {'S', 'X'}
-            };
+                dictLetterFreq.Add(kvp.Key, listFreqLang[counter]);
+                counter++;
+            }
 
-
+            return dictLetterFreq;
+        }
+        static string DecryptMessage(string statement, Dictionary<char, char> dictLetterFreq, string message)
+        {
             foreach (char ch in statement)
             {
-                if (dictLetters.TryGetValue(ch, out var value))
+                if (char.IsUpper(ch))
                 {
-                    message += value;
+                    message += dictLetterFreq[ch];
                 }
-                else message += ch;
+                else if (char.IsLower(ch))
+                {
+                    message += char.ToLower(dictLetterFreq[char.ToUpper(ch)]);
+                }
+                else
+                {
+                    message += ch;
+                }
             }
 
+            return message;
         }
-            Console.WriteLine(message);
-
-
-        }
-
-
     }
 }
